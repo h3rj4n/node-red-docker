@@ -1,0 +1,21 @@
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: build
+  image: plugins/docker:linux-arm64
+  settings:
+    repo: h3rj4n/node-red
+    dockerfile: aarch64/Dockerfile
+    tags:
+      - latest
+      - '0.19'
+      - '0.19.6'
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password

@@ -1,4 +1,4 @@
-FROM aarch64/node:4.6-slim
+FROM arm64v8/node:8-alpine
 
 # Experimental ARMv8 support for Node-RED
 
@@ -11,7 +11,12 @@ RUN mkdir /data
 WORKDIR /usr/src/node-red
 
 # Add node-red user so we aren't running as root.
-RUN useradd --home-dir /usr/src/node-red --no-create-home node-red \
+RUN apk --update --no-cache add python docker git \
+    && apk --update --no-cache add --virtual .build-dependencies python-dev make g++ autoconf \
+    && npm install bcrypt@2.0.1 \
+    && apk del .build-dependencies \
+    && adduser -h /usr/src/node-red -H -D node-red \
+    && addgroup node-red ping \
     && chown -R node-red:node-red /data \
     && chown -R node-red:node-red /usr/src/node-red
 
